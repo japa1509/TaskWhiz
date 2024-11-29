@@ -10,7 +10,10 @@ import { TodosLoading } from "../components/TodosLoading";
 import { Modal } from "../components/Modal";
 import { TodoContext } from "../context/TodoContext";
 import { FormTodo } from "../components/FormTodo";
-
+import { SeccionNav } from "../components/SeccionNav";
+import { NavHeader } from "../components/NavHeader";
+import { NavTodo } from "../components/NavTodo";
+import { FinalizedTodo } from "../components/FinalizedTodo";
 function App() {
   const {
     deleteTodos,
@@ -21,15 +24,21 @@ function App() {
     openModal,
     setOpenModal,
     editarTodos,
+    toggleImportantTodo,
+    
   } = useContext(TodoContext);
   return (
     <>
-      <main className="flex flex-col justify-center items-center p-4 gap-y-6">
-        <h1 className="text-center font-bold text-4xl">Todos-Anime</h1>
-
+      <main className="flex flex-col md:flex-row w-full h-screen gap-y-6">
+      <section className="bg-[#262626] lg:w-1/4 text-white  md:w-1/3 hidden sm:block">
+        <SeccionNav>
+          <NavHeader/>
+          <TodoSearch  />
+          <NavTodo/>
+        </SeccionNav>
+      </section>
+        <section className="md:w-2/3 lg:w-3/4 bg-[#1e1e1e] text-white">
         <TodoCount />
-        <TodoSearch  />
-
         <TodoList>
           {loading && (
             <>
@@ -45,11 +54,14 @@ function App() {
               key={todo.text}
               todo={todo.text}
               completed={todo.completed}
+              important={todo.important}
+              onToggleImportant={() => toggleImportantTodo(todo.text)}
               onComplete={() => completeTodos(todo.text)}
               onDelete={() => deleteTodos(todo.text)}
               onEdit={() => editarTodos(todo.text)}
             />
           ))}
+        <FinalizedTodo/>
         </TodoList>
         <CreateTodoButton setOpenModal={setOpenModal} />
         {openModal && (
@@ -57,6 +69,7 @@ function App() {
             <FormTodo/>
           </Modal>
         )}
+        </section>
       </main>
     </>
   );
